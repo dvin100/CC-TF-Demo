@@ -84,14 +84,17 @@ Once finished, in this view, click [Connect]
 ![image](https://github.com/dvin100/CC-TF-Demo/assets/22193622/a563d80a-caf7-480b-979f-1a0fa9c8e10e)
 
 In the next window, click [Drivers]
-Then, copy the FQDN after the @ sign. In the example below: ***mongodb.ykqlpcn.mongodb.net***
+Then, copy the FQDN after the @ sign. In the example below: ***mongodb.ykqlpcn.mongodb.net***  
 Keep this as we will need it in the following steps
 ![image](https://github.com/dvin100/CC-TF-Demo/assets/22193622/f308cdb3-3fa0-47c1-b451-c82533576203)
 
 
 # Setup Terraform 
 
-1. Create a directory 
-
-
+1. From the command line create a directory and cd in it  
+     **mkdir CC-TF-DEMO**  
+     **cd CC-TF-DEMO**   
+  
+2. Download the Terraform script    
+    **wget https://github.com/dvin100/CC-TF-Demo/archive/refs/heads/main.zip**
 
