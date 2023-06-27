@@ -89,7 +89,9 @@ Keep this as we will need it in the following steps
 ![image](https://github.com/dvin100/CC-TF-Demo/assets/22193622/f308cdb3-3fa0-47c1-b451-c82533576203)
 
 
-# Configure the Terraform variables 
+# Setup Terraform 
+
+1. Create a directory 
 
 
 
