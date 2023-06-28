@@ -141,11 +141,11 @@ Once the script has completed, you can go to next steps.
 9. Copy the content of the ksqlDB.sql file and paste it in the editor  
 10. Click [Run query] and let it complete
 11. In the [Editor], change the [auto.offset.reset] to [Latest]
-12. In the [Editor], paste the following select statement to view the real-time enriched stream containing transactions, users, credit cards and store information combined together
+12. In the [Editor], paste the following select statement to view the real-time enriched stream containing transactions, users, credit cards and store information combined together   
     **select * from TRANSACTIONS_FULL EMIT CHANGES;**
 13. Click [Run query] and eventually [Stop] 
-14. In the [Editor], paste the following select statement to view the potential fraudulent credit cards activities
-    **select * from FRAUD EMIT CHANGES;**
+14. In the [Editor], paste the following select statement to view the potential fraudulent credit cards activities   
+    **select * from FRAUD EMIT CHANGES;** 
 15. Click [Run query] and eventually [Stop] 
 
 # MongoDB validation
