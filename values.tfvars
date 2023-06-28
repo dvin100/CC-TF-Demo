@@ -17,17 +17,10 @@ topics         = ["cc-workshop.creditcards.users","cc-workshop.creditcards.store
 #
 #######################
 
-#cloud_api_key     = "[cloud_api_key]"
-#cloud_api_secret  = "[cloud_api_secret]"
+cloud_api_key     = "[cloud_api_key]"
+cloud_api_secret  = "[cloud_api_secret]"
 
-#mongo_username    = "[mongo_username]"
-#mongo_password    = "[mongo_password]"
-#mongo_endpoint    = "[mongo_endpoint]"
+mongo_username    = "[mongo_username]"
+mongo_password    = "[mongo_password]"
+mongo_endpoint    = "[mongo_endpoint]"
 
-
-
-cloud_api_key     = "3YUWICP7G3ABL6HV"
-cloud_api_secret  = "nz5DYqyRddnx4voo3rmxW0jkEUjE75ukjM3+g01GqgMN0is9IeSwhAccISaz+p6x"
-mongo_username    = "user_1"
-mongo_password    = "password_1"
-mongo_endpoint    = "mongodb.ykqlpcn.mongodb.net"
