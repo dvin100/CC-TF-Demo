@@ -98,3 +98,10 @@ Keep this as we will need it in the following steps
 2. Download the Terraform script    
     **wget https://github.com/dvin100/CC-TF-Demo/archive/refs/heads/main.zip**
 
+3. Unzip the file  
+    **unzip main.zip**
+
+4. cd ...
+
+5.  
+
