@@ -52,9 +52,9 @@ This API-Key will be used by Terraform to create all the resources in Confluent 
 2. Click [Create Key]
 3. Select [Global access] + next
 4. Add a description (optional) and click [Download and continue]
-5. This will save the file containing API-Key and Secret that we will need for next steps to update the following values
-    cloud_api_key     = "[cloud_api_key]"  
-    cloud_api_secret  = "[cloud_api_secret]"  
+5. This will save the file containing API-Key and Secret that we will need for next steps to update the following values   
+    cloud_api_key = "[cloud_api_key]"  
+    cloud_api_secret = "[cloud_api_secret]"  
 
 
 ## Create a MongoDB Atlas account and database
@@ -72,9 +72,9 @@ For the next step, under security quickstart
 Step 1 - How would you like to authenticate your connection?
 1. Enter a username and password that will be used by the connector to authenticate to the DB
 2. Click [Create User]
-3. This username and password will be needed for next steps to update the following values
-    mongo_username    = "[mongo_username]"  
-    mongo_password    = "[mongo_password]"  
+3. This username and password will be needed for next steps to update the following values  
+    mongo_username = "[mongo_username]"    
+    mongo_password = "[mongo_password]"  
     
 ![image](https://github.com/dvin100/CC-TF-Demo/assets/22193622/30be95a1-86e2-4f68-a432-0b52b5f49057)
 
@@ -88,10 +88,10 @@ Step 2 - Where would you like to connect from?
 Once finished, in this view, click [Connect]
 ![image](https://github.com/dvin100/CC-TF-Demo/assets/22193622/a563d80a-caf7-480b-979f-1a0fa9c8e10e)
 
-In the next window, click [Drivers]
-Then, copy the FQDN after the @ sign. In the example below: ***mongodb.ykqlpcn.mongodb.net***  
-Keep this as we will need it in the following steps to update the following values
-   mongo_endpoint    = "[mongo_endpoint]"  
+In the next window, click [Drivers]   
+Then, copy the FQDN after the @ sign. In the example below: ***mongodb.ykqlpcn.mongodb.net***     
+Keep this as we will need it in the following steps to update the following values:      
+       mongo_endpoint = "[mongo_endpoint]"    
 
 ![image](https://github.com/dvin100/CC-TF-Demo/assets/22193622/f308cdb3-3fa0-47c1-b451-c82533576203)
 
