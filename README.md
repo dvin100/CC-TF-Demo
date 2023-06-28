@@ -52,7 +52,9 @@ This API-Key will be used by Terraform to create all the resources in Confluent 
 2. Click [Create Key]
 3. Select [Global access] + next
 4. Add a description (optional) and click [Download and continue]
-5. This will save the file containing API-Key and Secret that we will need for next step
+5. This will save the file containing API-Key and Secret that we will need for next steps to update the following values
+    cloud_api_key     = "[cloud_api_key]"  
+    cloud_api_secret  = "[cloud_api_secret]"  
 
 
 ## Create a MongoDB Atlas account and database
@@ -70,7 +72,10 @@ For the next step, under security quickstart
 Step 1 - How would you like to authenticate your connection?
 1. Enter a username and password that will be used by the connector to authenticate to the DB
 2. Click [Create User]
-   
+3. This username and password will be needed for next steps to update the following values
+    mongo_username    = "[mongo_username]"  
+    mongo_password    = "[mongo_password]"  
+    
 ![image](https://github.com/dvin100/CC-TF-Demo/assets/22193622/30be95a1-86e2-4f68-a432-0b52b5f49057)
 
 Step 2 - Where would you like to connect from?
@@ -85,23 +90,73 @@ Once finished, in this view, click [Connect]
 
 In the next window, click [Drivers]
 Then, copy the FQDN after the @ sign. In the example below: ***mongodb.ykqlpcn.mongodb.net***  
-Keep this as we will need it in the following steps
+Keep this as we will need it in the following steps to update the following values
+   mongo_endpoint    = "[mongo_endpoint]"  
+
 ![image](https://github.com/dvin100/CC-TF-Demo/assets/22193622/f308cdb3-3fa0-47c1-b451-c82533576203)
 
 
 # Setup Terraform 
 
-1. From the command line create a directory and cd in it  
-     **mkdir CC-TF-DEMO**  
-     **cd CC-TF-DEMO**   
-  
-2. Download the Terraform script    
+1. Download the Terraform script    
     **wget https://github.com/dvin100/CC-TF-Demo/archive/refs/heads/main.zip**
 
-3. Unzip the file  
+2. Unzip the file   
     **unzip main.zip**
 
-4. cd ...
+3. Switch to the unzipped directory  
+   **cd CC-TF-Demo-main**
 
-5.  
+4.  Update the **values.tfvars** file with the values that were gathered throuhout the steps above  
+     
+    cloud_api_key     = "[cloud_api_key]"  
+    cloud_api_secret  = "[cloud_api_secret]"  
+          
+    mongo_username    = "[mongo_username]"  
+    mongo_password    = "[mongo_password]"  
+    mongo_endpoint    = "[mongo_endpoint]"  
 
+
+# Run Terraform to create everything
+
+From the command line, run the following commands:   
+
+1. terraform init
+2. terraform plan -var-file values.tfvars
+3. terraform apply -auto-approve -var-file values.tfvars
+
+Once the script has completed, you can go to next steps.
+
+
+# Confluent Cloud validation and ksqlDB script 
+
+1. Login to Confluent Cloud and click on [View environments] -- https://confluent.cloud/
+2. Click on the [WORKSHOP] environment
+3. Click on the [CREDITCARDS-WORKSHOP] cluster
+4. Click on [Topics] and validate that topics where created
+5. Click on the [transactions] topic and then [Messages] to view event coming in the topic
+6. Click on [Connectors]. You should see 3 connectors
+7. Click on [ksqlDB] and then [ksqlDB-CreditCards]
+8. In the [Editor], change the [auto.offset.reset] to [Earliest]
+9. Copy the content of the ksqlDB.sql file and paste it in the editor  
+10. Click [Run query] and let it complete
+11. In the [Editor], change the [auto.offset.reset] to [Latest]
+12. In the [Editor], paste the following select statement to view the real-time enriched stream containing transactions, users, credit cards and store information combined together
+    **select * from TRANSACTIONS_FULL EMIT CHANGES;**
+13. Click [Run query] and eventually [Stop] 
+14. In the [Editor], paste the following select statement to view the potential fraudulent credit cards activities
+    **select * from FRAUD EMIT CHANGES;**
+15. Click [Run query] and eventually [Stop] 
+
+# MongoDB validation
+
+1. Login your MongoDB account -- https://cloud.mongodb.com/
+2. On the left, click [Database]
+3. Under Database Deployment, beside your mongodb database, click on [Browse Collections]
+4. Under [mongodb.TRANSACTION_FULL], you should see values coming from our Confluent Cloud [TRANSACTION_FULL] topic
+
+# Cleanup everything
+From the command line, run the following commands;
+
+1. **cd CC-TF-Demo-main**
+2. **terraform destroy -auto-approve -var-file values.tfvars**
