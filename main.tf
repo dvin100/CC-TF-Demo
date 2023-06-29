@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "confluent" {
-  # Set through env vars as:
+  # Could be set through env vars
   cloud_api_key    = var.cloud_api_key   
   cloud_api_secret = var.cloud_api_secret
 }
@@ -42,20 +42,12 @@ resource "confluent_schema_registry_cluster" "sr_cluster" {
     region {
         id = data.confluent_schema_registry_region.sr_region.id
     }
+
+    depends_on = [confluent_environment.demo_env]
+
     lifecycle {
         prevent_destroy = false
     }
-}
-
-resource "confluent_service_account" "sa-tf" {
-  display_name = var.sa_name
-  description  = "Service Account created by TF for Demos"
-}
-
-resource "confluent_role_binding" "environment-rb" {
-  principal   = "User:${confluent_service_account.sa-tf.id}"
-  role_name   = "EnvironmentAdmin"
-  crn_pattern = confluent_environment.demo_env.resource_name
 }
 
 
@@ -71,15 +63,22 @@ resource "confluent_kafka_cluster" "cluster" {
     environment {
         id = confluent_environment.demo_env.id
     }
+
+    depends_on = [confluent_schema_registry_cluster.sr_cluster]
+
     lifecycle {
         prevent_destroy = false
     }
 }
 
 # --------------------------------------------------------
-# API-Keys for the service account
-# The hardcoded values (owner api_version and kind) are from the base terraform.tfstate
+# Service Account, API-Keys and Role assignment
 # --------------------------------------------------------
+resource "confluent_service_account" "sa-tf" {
+  display_name = var.sa_name
+  description  = "Service Account created by TF for Demos"
+}
+
 resource "confluent_api_key" "sa-tf-kafka-api-key" {
   display_name = "sa-tf-kafka-api-key"
   description  = "Kafka API Key that is owned by 'tf-sa-demo' service account"
@@ -99,9 +98,18 @@ resource "confluent_api_key" "sa-tf-kafka-api-key" {
     }
   }
 
+  depends_on = [confluent_service_account.sa-tf, confluent_kafka_cluster.cluster]
+
   lifecycle {
     prevent_destroy = false
   }
+}
+
+resource "confluent_role_binding" "environment-rb" {
+  principal   = "User:${confluent_service_account.sa-tf.id}"
+  role_name   = "EnvironmentAdmin"
+  crn_pattern = confluent_environment.demo_env.resource_name
+  depends_on = [confluent_api_key.sa-tf-kafka-api-key]
 }
 
 # --------------------------------------------------------
@@ -119,6 +127,9 @@ resource "confluent_kafka_topic" "topics" {
     key    = confluent_api_key.sa-tf-kafka-api-key.id
     secret = confluent_api_key.sa-tf-kafka-api-key.secret
   }
+
+  depends_on = [confluent_role_binding.environment-rb, confluent_kafka_cluster.cluster]
+
   lifecycle {
     prevent_destroy = false
   }
@@ -148,7 +159,7 @@ resource "confluent_connector" "datagen_conn" {
         "kafka.topic"                ="transactions"            
   }
 
-    depends_on = [confluent_kafka_topic.topics] 
+    depends_on = [confluent_kafka_topic.topics, confluent_api_key.sa-tf-kafka-api-key] 
 
    lifecycle {
     prevent_destroy = false
@@ -203,7 +214,7 @@ resource "confluent_connector" "mysql_conn" {
       "json.output.decimal.format" = "BASE64"
       "tasks.max" = "1"
 }
-  depends_on = [confluent_kafka_topic.topics] 
+  depends_on = [confluent_kafka_topic.topics, confluent_api_key.sa-tf-kafka-api-key] 
 
    lifecycle {
     prevent_destroy = false
@@ -237,7 +248,7 @@ resource "confluent_connector" "mongodb_conn" {
      "database": "mongodb",
      "tasks.max": "1"
 }
-  depends_on = [confluent_kafka_topic.topics] 
+  depends_on = [confluent_kafka_topic.topics, confluent_api_key.sa-tf-kafka-api-key] 
 
    lifecycle {
     prevent_destroy = false
@@ -260,6 +271,7 @@ resource "confluent_ksql_cluster" "ksql" {
     id = confluent_environment.demo_env.id
   }
  
+  depends_on = [confluent_api_key.sa-tf-kafka-api-key]
   lifecycle {
     prevent_destroy = false
   }
